@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Uma carta para você</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#1b1633;--bg2:#2a1f4a;--paper:#fbf1ef;--ink:#3a1f3d;--rose:#e0607e;--lilac:#c9b8f0;
+--serif:"Cormorant Garamond",Georgia,serif;--hand:"Caveat","Segoe Script",cursive;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% 0%,var(--bg2),var(--bg) 70%);color:var(--paper);font-family:var(--serif);overflow-x:hidden}
+.hearts{position:fixed;inset:0;pointer-events:none;overflow:hidden}
+.hearts span{position:absolute;bottom:-40px;color:var(--rose);opacity:.0;animation:up linear infinite}
+@keyframes up{0%{transform:translateY(0) rotate(0);opacity:0}10%{opacity:.35}90%{opacity:.25}100%{transform:translateY(-110vh) rotate(25deg);opacity:0}}
+main{position:relative;max-width:640px;margin:0 auto;padding:48px 20px 80px}
+h1{font-weight:500;font-style:italic;font-size:clamp(2.6rem,9vw,4.2rem);line-height:1.05;margin:0 0 12px;text-align:center}
+.sub{text-align:center;color:var(--lilac);font-size:1.25rem;margin:0 0 36px}
+.setup{display:grid;gap:14px;max-width:380px;margin:0 auto}
+label{font-size:1.1rem;color:var(--lilac)}
+input{width:100%;margin-top:4px;padding:12px 14px;font:inherit;font-size:1.2rem;color:var(--paper);background:rgba(255,255,255,.07);border:1px solid rgba(201,184,240,.4);border-radius:10px}
+input:focus,button:focus-visible{outline:2px solid var(--rose);outline-offset:2px}
+button{font:inherit;font-size:1.25rem;font-weight:600;padding:13px 22px;border:0;border-radius:999px;background:var(--rose);color:#2a0f1e;cursor:pointer}
+button:hover{filter:brightness(1.08)}
+.hidden{display:none}
+.envwrap{text-align:center}
+.env{position:relative;width:min(320px,86vw);height:210px;margin:20px auto 0;background:#e9d9f5;border-radius:6px;cursor:pointer;box-shadow:0 20px 50px rgba(0,0,0,.4);border:0;padding:0;display:block}
+.env::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 49.6%,#d4bfe9 50%) left/50% 100% no-repeat,linear-gradient(225deg,transparent 49.6%,#d4bfe9 50%) right/50% 100% no-repeat;border-radius:6px}
+.flap{position:absolute;left:0;right:0;top:0;height:60%;background:#c9b0e4;clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .7s ease}
+.seal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:2rem;color:var(--rose);z-index:2;animation:beat 1.6s ease-in-out infinite}
+@keyframes beat{50%{transform:translate(-50%,-50%) scale(1.18)}}
+.env.open .flap{transform:rotateX(180deg)}
+.env.open .seal{display:none}
+.hint{margin-top:18px;color:var(--lilac);font-size:1.2rem}
+.letter{margin-top:30px;background:var(--paper);color:var(--ink);padding:36px 28px 40px;border-radius:4px;box-shadow:0 24px 60px rgba(0,0,0,.45);font-family:var(--hand);font-size:clamp(1.4rem,4.6vw,1.7rem);line-height:1.5;background-image:repeating-linear-gradient(transparent,transparent 41px,rgba(224,96,126,.14) 42px);animation:unfold .9s ease both}
+@keyframes unfold{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
+.letter p{margin:0 0 .9em}
+.letter .to{font-size:1.15em;font-weight:600}
+.letter .sig{text-align:right;margin-top:1.2em}
+.count{margin:34px 0 0;text-align:center;font-size:1.3rem;color:var(--lilac)}
+.count b{display:block;font-size:3.2rem;font-weight:500;font-style:italic;color:var(--paper)}
+.again{display:block;margin:28px auto 0;background:transparent;color:var(--lilac);border:1px solid rgba(201,184,240,.5);font-size:1.1rem;padding:9px 18px}
+@media (prefers-reduced-motion:reduce){.hearts{display:none}.seal,.letter{animation:none}.flap{transition:none}}
+</style>
+</head>
+<body>
+<div class="hearts" id="hearts" aria-hidden="true"></div>
+<main>
+  <h1 id="title">Uma carta para o amor da minha vida</h1>
+  <p class="sub" id="sub">Escreva os nomes e abra o envelope.</p>
+
+  <div class="setup" id="setup">
+    <label>Nome de quem vai receber
+      <input id="her" placeholder="Ex.: Ana" autocomplete="off"></label>
+    <label>Seu nome
+      <input id="me" placeholder="Ex.: Carlos" autocomplete="off"></label>
+    <label>Desde quando vocês estão juntos? (opcional)
+      <input id="since" type="date"></label>
+    <button id="go" type="button">Preparar a carta</button>
+  </div>
+
+  <div class="envwrap hidden" id="envwrap">
+    <button class="env" id="env" type="button" aria-label="Abrir a carta"><span class="flap"></span><span class="seal">♥</span></button>
+    <p class="hint" id="hint">Toque no envelope para abrir</p>
+  </div>
+
+  <article class="letter hidden" id="letter"></article>
+  <p class="count hidden" id="count"></p>
+  <button class="again hidden" id="again" type="button">Mudar nomes</button>
+</main>
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var h=$("hearts");
+  for(var i=0;i<14;i++){var s=document.createElement("span");s.textContent="♥";
+    s.style.left=(Math.random()*100)+"%";s.style.fontSize=(12+Math.random()*22)+"px";
+    s.style.animationDuration=(12+Math.random()*14)+"s";s.style.animationDelay=(-Math.random()*20)+"s";h.appendChild(s);}
+  function esc(t){var d=document.createElement("div");d.textContent=t;return d.innerHTML}
+  var her="",me="",since="";
+  $("go").onclick=function(){
+    her=$("her").value.trim()||"meu amor";me=$("me").value.trim();since=$("since").value;
+    $("setup").classList.add("hidden");$("envwrap").classList.remove("hidden");
+    $("title").textContent="Chegou uma carta para "+(her==="meu amor"?"você":her);
+    $("sub").textContent="Alguém escreveu com muito carinho.";
+  };
+  // Personalização pronta para enviar: a carta já abre no envelope.
+  $("her").value="Elluar";
+  $("me").value="João";
+  $("since").value="2026-05-25";
+  $("go").click();
+  $("env").onclick=function(){
+    var e=$("env");if(e.classList.contains("open"))return;e.classList.add("open");$("hint").classList.add("hidden");
+    setTimeout(function(){
+      $("envwrap").classList.add("hidden");
+      var L=$("letter");
+      L.innerHTML='<p class="to">Para '+esc(her)+',</p>'+
+      '<p>Eu queria te dar algo que coubesse no que sinto, mas não existe presente grande o bastante. Então escrevi.</p>'+
+      '<p>Você chegou e deixou tudo mais leve. Os dias comuns viraram os meus favoritos, porque agora eles têm o seu riso, a sua voz e o seu jeito de tornar qualquer lugar um lar.</p>'+
+      '<p>Obrigado por cada abraço que consertou um dia ruim, por cada paciência que eu não merecia e por acreditar em mim quando eu mesmo duvidava. Você me faz querer ser alguém melhor, e isso é o maior presente que alguém já me deu.</p>'+
+      '<p>Se eu pudesse escolher de novo entre todas as pessoas do mundo, em todas as vidas possíveis, eu escolheria você. Sempre você.</p>'+
+      '<p>Eu te amo hoje, amanhã e em todos os dias que vierem depois.</p>'+
+      '<p class="sig">Com todo o meu amor,<br>'+esc(me||"quem te ama")+' ♥</p>';
+      L.classList.remove("hidden");
+      if(since){var d=Math.floor((Date.now()-new Date(since+"T00:00:00").getTime())/864e5);
+        if(d>0){var c=$("count");c.innerHTML='<b>'+d.toLocaleString("pt-BR")+'</b>dias ao seu lado, e eu escolheria todos de novo.';c.classList.remove("hidden");}}
+      $("again").classList.remove("hidden");window.scrollTo({top:0,behavior:"smooth"});
+    },750);
+  };
+  $("again").onclick=function(){
+    ["letter","count","again","envwrap"].forEach(function(i){$(i).classList.add("hidden")});
+    $("env").classList.remove("open");$("hint").classList.remove("hidden");
+    $("setup").classList.remove("hidden");$("title").textContent="Uma carta para o amor da minha vida";
+    $("sub").textContent="Escreva os nomes e abra o envelope.";
+  };
+})();
+</script>
+</body>
+</html>
